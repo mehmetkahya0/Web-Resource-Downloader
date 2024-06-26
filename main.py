@@ -112,6 +112,11 @@ def main():
         print(Fore.RED + "Deleting folder..." + Fore.RESET)
         shutil.rmtree(folder)
         print(Fore.GREEN + "Folder deleted successfully" + Fore.RESET)
+        
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(Fore.LIGHTYELLOW_EX + f"System run time: {elapsed_time} seconds" + Fore.RESET)
+
         print("System exit..") 
         exit(0)
 
