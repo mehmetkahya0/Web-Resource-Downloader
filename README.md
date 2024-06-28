@@ -8,6 +8,7 @@ This is a Python script that downloads all resources (images, scripts, styleshee
 - Option to filter resources by file extension
 - Saves a table of the download status of each resource in Markdown format
 - Option to delete the download folder after downloading resources
+- Logging: Messages are logged to a file for troubleshooting and record keeping
 
 ## Requirements
 
@@ -43,7 +44,13 @@ This is a Python script that downloads all resources (images, scripts, styleshee
     python main.py https://example.com resources --delete
     ```
 
+5. To enable logging to a file, use the `--log` option followed by the name of the log file:
+
+    ```bash
+    python main.py https://example.com resources --log download.log
+    ```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-@mehmetkahya0 
+@mehmetkahya0

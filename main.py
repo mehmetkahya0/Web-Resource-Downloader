@@ -11,6 +11,8 @@ import argparse
 import shutil
 import time
 from urllib.parse import urljoin
+import logging
+
 
 def get_html(url):
     try:
@@ -80,7 +82,11 @@ def main():
     parser.add_argument("folder", help="The folder to download resources to.")
     parser.add_argument("--delete", action="store_true", help="Delete the folder after downloading resources.")
     parser.add_argument("--extensions", nargs='+', default=[], help="The file extensions to download. If not provided, all resources will be downloaded.")
+    parser.add_argument("--log", type=str, help="The name of the log file.")
     args = parser.parse_args()
+
+    if args.log:
+        logging.basicConfig(filename=args.log, level=logging.INFO)
 
     url = args.url
     folder = args.folder
@@ -97,16 +103,22 @@ def main():
         f.write(markdown_table)
         
     print(markdown_table)
+    if args.log:
+        logging.info(markdown_table)
 
     # If the --delete option was provided, delete the folder
     if args.delete:
         print(Fore.RED + "Deleting folder..." + Fore.RESET)
         shutil.rmtree(folder)
         print(Fore.GREEN + "Folder deleted successfully" + Fore.RESET)
+        if args.log:
+            logging.info("Folder deleted successfully")
         
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(Fore.LIGHTYELLOW_EX + f"System run time: {elapsed_time} seconds" + Fore.RESET)
+    if args.log:
+        logging.info(f"System run time: {elapsed_time} seconds")
 
     if not args.delete:
         for link in links:
@@ -114,10 +126,14 @@ def main():
             resources = get_resources(html, link, args)
             markdown_table = download_resources(folder, resources)
             print(markdown_table)
+            if args.log:
+                logging.info(markdown_table)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(Fore.LIGHTYELLOW_EX + f"System run time: {elapsed_time} seconds" + Fore.RESET)
+    if args.log:
+        logging.info(f"System run time: {elapsed_time} seconds")
 
 if __name__ == '__main__':
     main()
