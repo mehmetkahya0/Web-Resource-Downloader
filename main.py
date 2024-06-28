@@ -10,8 +10,7 @@ from prettytable import PrettyTable, MARKDOWN
 import argparse
 import shutil
 import time
-
-
+from urllib.parse import urljoin
 
 def get_html(url):
     try:
@@ -36,21 +35,13 @@ def get_links(html, base_url):
 
     return links
 
-def get_resources(html, base_url):
+def get_resources(html, base_url, args):
     soup = BeautifulSoup(html, 'html.parser')
-    resources = set()
-    for tag in soup.find_all(re.compile('^link|img|script'), src=True):
-        url = urllib.parse.urljoin(base_url, tag['src'])
-        resources.add(url)
-
-    for tag in soup.find_all('link', href=True):
-        url = urllib.parse.urljoin(base_url, tag['href'])
-        resources.add(url)
-
-    for tag in soup.find_all('a', href=True):
-        url = urllib.parse.urljoin(base_url, tag['href'])
-        resources.add(url)
-
+    resources = []
+    for res in soup.find_all(src=True):
+        url = urljoin(base_url, res['src'])
+        if url.split('.')[-1] in args.extensions:
+            resources.append(url)
     return resources
 
 def download_resources(folder, resources):
@@ -84,11 +75,11 @@ def download_resources(folder, resources):
 
 def main():
     start_time = time.time()
-
     parser = argparse.ArgumentParser(description="Download resources from a website.")
     parser.add_argument("url", help="The URL of the website to download resources from.")
     parser.add_argument("folder", help="The folder to download resources to.")
     parser.add_argument("--delete", action="store_true", help="Delete the folder after downloading resources.")
+    parser.add_argument("--extensions", nargs='+', default=[], help="The file extensions to download. If not provided, all resources will be downloaded.")
     args = parser.parse_args()
 
     url = args.url
@@ -99,7 +90,7 @@ def main():
 
     html = get_html(url)
     links = get_links(html, url)
-    resources = get_resources(html, url)
+    resources = get_resources(html, url, args)
 
     markdown_table = download_resources(folder, resources)
     with open('output.md', 'w') as f:
@@ -113,18 +104,16 @@ def main():
         shutil.rmtree(folder)
         print(Fore.GREEN + "Folder deleted successfully" + Fore.RESET)
         
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        print(Fore.LIGHTYELLOW_EX + f"System run time: {elapsed_time} seconds" + Fore.RESET)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(Fore.LIGHTYELLOW_EX + f"System run time: {elapsed_time} seconds" + Fore.RESET)
 
-        print("System exit..") 
-        exit(0)
-
-    for link in links:
-        html = get_html(link)
-        resources = get_resources(html, link)
-        markdown_table = download_resources(folder, resources)
-        print(markdown_table)
+    if not args.delete:
+        for link in links:
+            html = get_html(link)
+            resources = get_resources(html, link, args)
+            markdown_table = download_resources(folder, resources)
+            print(markdown_table)
 
     end_time = time.time()
     elapsed_time = end_time - start_time

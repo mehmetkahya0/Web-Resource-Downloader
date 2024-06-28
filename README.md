@@ -5,6 +5,7 @@ This is a Python script that downloads all resources (images, scripts, styleshee
 ## Features
 
 - Downloads all resources from a given website
+- Option to filter resources by file extension
 - Saves a table of the download status of each resource in Markdown format
 - Option to delete the download folder after downloading resources
 
@@ -30,7 +31,13 @@ This is a Python script that downloads all resources (images, scripts, styleshee
     python main.py https://example.com resources
     ```
 
-3. To delete the download folder after downloading resources, use the `--delete` option:
+3. To filter resources by file extension, use the `--extensions` option followed by the extensions you want to download:
+
+    ```bash
+    python main.py https://example.com resources --extensions jpg png
+    ```
+
+4. To delete the download folder after downloading resources, use the `--delete` option:
 
     ```bash
     python main.py https://example.com resources --delete
@@ -39,5 +46,4 @@ This is a Python script that downloads all resources (images, scripts, styleshee
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-@mehmetkahya0
-
+@mehmetkahya0 
