@@ -1,4 +1,5 @@
 # Web Resource Downloader
+![web-resource-downloader-cover](https://github.com/mehmetkahya0/Web-Resource-Downloader/assets/84154488/3baa860b-7f4a-45e4-8ae8-91ca1486c549)
 
 This is a Python script that downloads all resources (images, scripts, stylesheets, etc.) from a given website.
 
